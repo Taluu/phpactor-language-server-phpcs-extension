@@ -17,7 +17,7 @@ final class Entrypoint implements Extension
 
     public function load(ContainerBuilder $container)
     {
-        $container->register(Process::class, static function (Container $container): Process {
+        $container->register(Linter::class, static function (Container $container): Linter {
             $binaryPath = $container
                 ->get(FilePathResolverExtension::class)
                 ->resolve(
@@ -37,11 +37,13 @@ final class Entrypoint implements Extension
                 ->resolve('%project_root%')
             ;
 
-            return new Process(
+            $process = new Process(
                 $root,
                 $binaryPath,
                 $standard
             );
+
+            return new Linter($process);
         });
     }
 
